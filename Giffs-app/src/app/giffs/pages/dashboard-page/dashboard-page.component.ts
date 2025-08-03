@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { GifsSideMenuComponent } from "../../components/gifs-side-menu/gifs-side-menu.component";
 
 @Component({
-  selector: 'app-dashboard-page',
+  selector: 'dashboard-page',
   imports: [RouterOutlet, GifsSideMenuComponent],
   standalone: true,
   templateUrl: './dashboard-page.component.html',

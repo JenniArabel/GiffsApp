@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'search-page',
+  selector: 'gif-list-item',
   imports: [],
-  templateUrl: './search-page.component.html',
+  templateUrl: './gif-list-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class SearchPageComponent { }
+export class GifListItemComponent { }

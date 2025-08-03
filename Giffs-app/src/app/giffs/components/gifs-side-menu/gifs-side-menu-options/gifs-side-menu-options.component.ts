@@ -9,7 +9,7 @@ interface MenuOption {
 }
 
 @Component({
-  selector: 'app-gifs-side-menu-options',
+  selector: 'gifs-side-menu-options',
   imports: [RouterLink, RouterLinkActive],
   templateUrl: './gifs-side-menu-options.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
