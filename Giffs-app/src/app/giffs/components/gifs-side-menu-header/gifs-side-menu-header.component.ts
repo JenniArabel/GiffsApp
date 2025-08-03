@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { environment } from '../../../../environments/environment';
+import { environment } from '@environtments/environment';
+// import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-gifs-side-menu-header',
