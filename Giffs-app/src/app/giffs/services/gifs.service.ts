@@ -13,7 +13,7 @@ export class GifService { //Este servicio va a ser injectado en el componente tr
   private http = inject(HttpClient); //Injectamos y utilizamos el cliente HTTP de Angular
 
   trendingGifs = signal<Gif[]>([]); //Creamos una señal para almacenar los gifs que vamos a obtener de la API de Giphy
-
+  trendingGifsLoading = signal(true); //Creamos una señal para indicar si los gifs se estan cargando
   constructor() {
     this.loadTrendingGifs();
   }
@@ -29,7 +29,7 @@ export class GifService { //Este servicio va a ser injectado en el componente tr
 
       const gifs = GifMapper.mapGiphyItemsToGifsArray(response.data); //Utilizamos el mapper para transformar los datos de la API a nuestro modelo Gif
       this.trendingGifs.set(gifs); //Actualizamos la señal con los gifs obtenidos
-
+      this
       console.log({ gifs }); // Mostramos los gifs en la consola para verificar que se han obtenido correctamente
 
     });
