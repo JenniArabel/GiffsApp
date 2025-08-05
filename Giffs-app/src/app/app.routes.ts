@@ -16,6 +16,10 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./giffs/pages/trending-page/trending-page.component'),
       },
+      {
+        path: 'history/:query', //Url con argumento dinamico
+        loadComponent: () => import('./giffs/pages/gif-history/gif-history.component'),
+      }
     ],
   },
   {

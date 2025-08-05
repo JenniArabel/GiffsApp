@@ -66,6 +66,11 @@ export class GifService { //Este servicio va a ser injectado en el componente tr
       //Se usa update porque queremos actualizar el valor de una señal existente
     );
   }
+
+  getHistoryGifs(query: string): Gif[] {
+    return this.searchHistory()[query.toLowerCase()] || []; //Obtenemos los gifs del historial de busqueda, si no existen, devolvemos un array vacio
+  }
+
 }
 // Este servicio se encarga de obtener los gifs de la API de Giphy
 // y transformarlos a nuestro modelo Gif utilizando el
