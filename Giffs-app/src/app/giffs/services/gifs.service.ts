@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import type { GiphyResponse } from '../interfaces/giphy.interfaces';
@@ -15,11 +15,16 @@ export class GifService { //Este servicio va a ser injectado en el componente tr
 
   trendingGifs = signal<Gif[]>([]); //Creamos una señal para almacenar los gifs que vamos a obtener de la API de Giphy
   trendingGifsLoading = signal(true); //Creamos una señal para indicar si los gifs se estan cargando
+
+  searchHistory = signal<Record<string, Gif[]>>({}); //Creamos una señal para almacenar el historial de busqueda de gifs
+  searchHistoryKeys = computed(() => Object.keys(this.searchHistory())); //Creamos una señal computada para obtener las claves del historial de busqueda
+
   constructor() {
     this.loadTrendingGifs();
   }
 
-  loadTrendingGifs(): void {
+  loadTrendingGifs(): void { //Este metodo se encarga de cargar los gifs mas populares de la API de Giphy
+    this.trendingGifsLoading.set(true); //Indicamos que los gifs estan cargando
     this.http.get<GiphyResponse>(`${environment.giphyUrl}/gifs/trending`, {
       params: {
         api_key: environment.giphyApiKey,
@@ -28,7 +33,7 @@ export class GifService { //Este servicio va a ser injectado en el componente tr
     }).subscribe((response) => {
       // response.data[0].images.original.url; Accedemos a la URL del gif original. Pero en vez de esto vamos a crear un mapper.
 
-      const gifs = GifMapper.mapGiphyItemsToGifsArray(response.data); //Utilizamos el mapper para transformar los datos de la API a nuestro modelo Gif
+      const gifs = GifMapper.mapGiphyItemsToGifsArray(response.data); //Utilizamos el mapper para transformar los datos de la API a un formato propio de Gif
       this.trendingGifs.set(gifs); //Actualizamos la señal con los gifs obtenidos
       this
       console.log({ gifs }); // Mostramos los gifs en la consola para verificar que se han obtenido correctamente
@@ -46,6 +51,19 @@ export class GifService { //Este servicio va a ser injectado en el componente tr
     }).pipe(
       map(({ data }) => data),
       map((items) => GifMapper.mapGiphyItemsToGifsArray(items)), // Utilizamos el mapper para transformar los datos de la API a nuestro modelo Gif
+
+      //Historial de busqueda
+
+        // Tap es el manejador de eventos secundarios de RxJS. No necesita regresar nada.
+        //Aqui vamos a tener el estado de los gifs que se han buscado
+      tap( items => {
+        this.searchHistory.update( history => ({ //
+          ...history, //spread operator para mantener el historial existente tal cual estaba originalmente
+          [query.toLowerCase()]: items // propiedad computada que se llama query, que es el texto de busqueda, y le asignamos los items obtenidos de la busqueda
+          // Actualizamos el historial de busqueda con los gifs obtenidos
+        }))
+      })
+      //Se usa update porque queremos actualizar el valor de una señal existente
     );
   }
 }
