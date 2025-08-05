@@ -1,9 +1,10 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { GiphyResponse } from '../interfaces/giphy.interfaces';
+import type { GiphyResponse } from '../interfaces/giphy.interfaces';
 import { GifMapper } from '../mapper/gif.mapper';
 import { Gif } from '../interfaces/gif.interface';
+import { map, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,19 @@ export class GifService { //Este servicio va a ser injectado en el componente tr
       console.log({ gifs }); // Mostramos los gifs en la consola para verificar que se han obtenido correctamente
 
     });
+  }
+
+  searchGifs(query: string): Observable<Gif[]> {
+    return this.http.get<GiphyResponse>(`${environment.giphyUrl}/gifs/search`, {
+      params: {
+        api_key: environment.giphyApiKey,
+        q: query,
+        limit: '20',
+      },
+    }).pipe(
+      map(({ data }) => data),
+      map((items) => GifMapper.mapGiphyItemsToGifsArray(items)), // Utilizamos el mapper para transformar los datos de la API a nuestro modelo Gif
+    );
   }
 }
 // Este servicio se encarga de obtener los gifs de la API de Giphy
